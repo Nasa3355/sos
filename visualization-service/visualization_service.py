@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import uvicorn
 import matplotlib.pyplot as plt
 import numpy as np
 import base64
@@ -26,6 +27,11 @@ async def generate_plot(request: PlotRequest):
     buf.seek(0)
     
     return {"plot": base64.b64encode(buf.read()).decode("utf-8")}
+
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+if __name__ == "__main__":
+    # Запуск на портах, указанных в docker-compose.yml 
+    uvicorn.run(app, host="0.0.0.0", port=8003)  # Для visualization-service

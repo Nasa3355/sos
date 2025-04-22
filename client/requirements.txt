@@ -1,2 +1,6 @@
+pip>=23.0
+setuptools>=68.2.0
+wheel
+
 httpx==0.24.1
 matplotlib==3.7.1

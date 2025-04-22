@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import uvicorn
 import numpy as np
 from scipy.linalg import solve
 from scipy.integrate import quad
@@ -161,3 +162,7 @@ async def calculate(request: SolverRequest):
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
+
+if __name__ == "__main__":
+    # Запуск на портах, указанных в docker-compose.yml 
+    uvicorn.run(app, host="0.0.0.0", port=8002)  # Для solver-service

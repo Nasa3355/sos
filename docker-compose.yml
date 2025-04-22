@@ -1,0 +1,40 @@
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      solver-service:
+        condition: service_healthy
+      visualization-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+
+  solver-service:
+    build: ./solver-service
+    ports:
+      - "8002:8000"  # Назначил новый внешний порт
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+
+  visualization-service:
+    build: ./visualization-service
+    ports:
+      - "8003:8001"  # Назначил новый внешний порт
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 10s
+
+  client:
+    build: ./client
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    environment:
+      - SOLVER_HOST=solver-service
+      - VISUALIZATION_HOST=visualization-service
+    stdin_open: true
+    tty: true
